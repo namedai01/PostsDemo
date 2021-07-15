@@ -9,13 +9,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import java.io.InvalidObjectException;
-
 @RestControllerAdvice
 public class ApiExceptionHandler {
-    /**
-     * EmptyResultDataAccessException will be handled separately
-     */
+    // EmptyResultDataAccessException will be handled separately
     @ExceptionHandler(EmptyResultDataAccessException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorMessage InvalidIdException(Exception ex, WebRequest request) {
@@ -26,6 +22,6 @@ public class ApiExceptionHandler {
     @ExceptionHandler(InvalidDataAccessApiUsageException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorMessage InvalidIdAddException(Exception ex, WebRequest request) {
-        return new ErrorMessage(1002, "Post khong dung dinh dang");
+        return new ErrorMessage(1002, "Input khong dung dinh dang");
     }
 }

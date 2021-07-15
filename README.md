@@ -34,4 +34,34 @@ In addition, user can like the specific post, namely:
 
 
 
+# NEW REQUEST:
+
+POST /post/{:id}/report
+
+Body: {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type": "SPAM|IMPOLITE",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"note": "Note..."  
+}
+
+Response:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"OK" or "NOT OK"
+
+### Validation:
+* id: required, độ dài [1-10], chỉ chứa ký tự số
+* type: required, là SPAM hoặc IMPOLITE
+* note: không required, độ dài [0 - 200]
+
+### Logic:
+* Nếu vi phạm validation thì trả về Lỗi invalid input data, log ra đối tượng lỗi
+* Nếu report SPAM: kiểm tra xem trong nội dung bài post có từ ngữ bị lặp lại hay không? (ví dụ: "Xin chào, xin chào" được coi như spam). Nếu đúng là spam, api trả về "OK", nếu k, trả về "NOT OK"
+* Nếu report IMPOLITE: kiểm tra xem trong nội dung bài post có chứa từ ngữ thô tục hay không? nếu có thì trả về OK, không thì trả về NOT OK
+
+### Bổ sung:
+* Bộ keyword để check từ ngữ thô tục được cấu hình trong file application.yml, cách nhau bằng dấu phẩy. *
+* Ví dụ: dm,vl,dkm
+
+
+
+
+
 

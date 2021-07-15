@@ -18,6 +18,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.transaction.Transactional;
+
 import static java.lang.Math.max;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
@@ -44,6 +46,7 @@ public class PostControllerTest {
     // Test api http://localhost:8081/posts with Method = GET
     @Test
     @Sql("/createPosts.sql")
+    @Transactional
     public void testFindAll() throws Exception {
         mvc.perform(get("/posts").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -57,6 +60,7 @@ public class PostControllerTest {
     // Test api http://localhost:8081/posts/ with Method = POST
     @Test
     @Sql("/createPosts.sql")
+    @Transactional
     public void testAdd() throws Exception {
 
         Post post = new Post(100L, "title1", "description1");
@@ -70,6 +74,7 @@ public class PostControllerTest {
 
     // Test api http://localhost:8081/posts/{id} with Method = PUT
     @Test
+    @Transactional
     @Sql("/createPosts.sql")
     public void testEdit() throws Exception {
         Post post = postsService.getPost(0L);
@@ -84,6 +89,7 @@ public class PostControllerTest {
     // Test api http://localhost:8081/posts/{id}/like with Method = PUT
     @Test
     @Sql("/createPosts.sql")
+    @Transactional
     public void testLike() throws Exception {
         Post post = postsService.getPost(0L);
 
@@ -97,6 +103,7 @@ public class PostControllerTest {
     // Test api http://localhost:8081/posts/{id}/unlike with Method = PUT
     @Test
     @Sql("/createPosts.sql")
+    @Transactional
     public void testUnLike() throws Exception {
         Post post = postsService.getPost(0L);
 
@@ -110,6 +117,7 @@ public class PostControllerTest {
     // Test api http://localhost:8081/posts/{id} with Method = GET
     @Test
     @Sql("/createPosts.sql")
+    @Transactional
     public void testGetPost() throws Exception {
         mvc.perform(get("/posts/0").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

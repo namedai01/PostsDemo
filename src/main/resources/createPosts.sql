@@ -13,3 +13,13 @@ VALUES (3, 'Sapa', 'Trong danh sách danh lam thắng cảnh Việt Nam nổi t
 
 INSERT INTO posts (id, title, description, like_count)
 VALUES (4, 'Thác Bản Giốc', 'Thác Bản Giốc là thác nước nổi tiếng nhất Cao Bằng và là một trong những danh lam thắng cảnh Việt Nam ấn tượng nhất', 1120);
+
+INSERT INTO posts (id, title, description, like_count)
+VALUES (5, 'Thác Bản Giốc', 'Thác Bản Giốc, là     thác nước nổi     tiếng nhất Cao Bằng. Nơi có Thác Bản   Giốc   nước;    suối   ', 12345);
+
+INSERT INTO posts (id, title, description, like_count)
+VALUES (6, 'Thác Bản Giốc', 'Thác Bản Giốc, là     thác nước nổi     tiếng nhất Cao Bằng. Nơi có   thác;    suối   ', 12345);
+
+INSERT INTO posts (id, title, description, like_count)
+VALUES (7, 'Thác Bạc', 'Thác Bạc là    thác nước vcl nổi duma     tiếng nhất    Cao Bằng', 12345);
+
