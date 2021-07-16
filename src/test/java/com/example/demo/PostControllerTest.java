@@ -1,7 +1,8 @@
 package com.example.demo;
 
 
-import com.example.demo.model.Post;
+import com.example.demo.dto.request.CreatePost;
+import com.example.demo.entity.Post;
 import com.example.demo.service.PostsService;
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
@@ -63,9 +64,9 @@ public class PostControllerTest {
     @Transactional
     public void testAdd() throws Exception {
 
-        Post post = new Post(100L, "title1", "description1");
+        CreatePost createPost = new CreatePost("title1", "description1");
 
-        mvc.perform(post("/posts").content(String.valueOf(new Gson().toJson(post))).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(post("/posts").content(String.valueOf(new Gson().toJson(createPost))).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", is("title1")))
                 .andExpect(jsonPath("$.description", is("description1")))

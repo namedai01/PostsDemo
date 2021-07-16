@@ -1,7 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Post;
-import com.example.demo.model.Report;
+import com.example.demo.dto.request.CreatePost;
+import com.example.demo.dto.request.CreateReport;
+import com.example.demo.dto.request.UpdatePost;
+import com.example.demo.entity.Post;
+import com.example.demo.entity.Report;
 import com.example.demo.service.PostsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +41,7 @@ public class PostsController {
     // This route help adding the specific post (in body of route) to the database,
     // if successfully it return "Add Post Successfully" else return "Add Post Failed".
     @PostMapping("/posts")
-    public Post addPost(@RequestBody Post post) {
+    public Post addPost(@RequestBody CreatePost post) {
         return postsService.add(post);
     }
 
@@ -57,7 +60,7 @@ public class PostsController {
     // This route help to update the specific post with the id variable
     // if successfully it return the updated post else throw the Exception with the code 1001, content: "Doi tuong khong ton tai"
     @PutMapping("/posts/{id}")
-    public Post editPost(@PathVariable(name = "id") Long id, @RequestBody Post post) {
+    public Post editPost(@PathVariable(name = "id") Long id, @RequestBody UpdatePost post) {
         return postsService.edit(id, post);
     }
 
@@ -84,8 +87,8 @@ public class PostsController {
     // This route help to send a report to check whether post is spam or impolite
     // if successfully it return "OK" or "NOT OK" else throw the Exception with the code 1001, content: "Doi tuong khong ton tai"
     @PostMapping("/posts/{id}/report")
-    public String sendReport(@PathVariable(name = "id") Long id, @RequestBody Report report) {
-        return postsService.sendReport(id, report);
+    public String sendReport(@PathVariable(name = "id") Long id, @RequestBody CreateReport createReport) {
+        return postsService.sendReport(id, createReport);
 //        return postsService.sendReport();
     }
 }

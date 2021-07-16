@@ -1,6 +1,7 @@
 package com.example.demo;
 
-import com.example.demo.model.Report;
+import com.example.demo.dto.request.CreateReport;
+import com.example.demo.entity.Report;
 import com.example.demo.service.PostsService;
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
@@ -45,9 +46,9 @@ public class ReportPostAPITest {
     @Sql("/createPosts.sql")
     @Transactional
     public void test_Id_NotExist() throws Exception {
-        Report report = new Report(null, "SPAM", "OK OK OK");
+        CreateReport createReport = new CreateReport(null, ReportType.SPAM.getValue(), "OK OK OK");
 
-        mvc.perform(MockMvcRequestBuilders.post("/posts/6/report").content(String.valueOf(new Gson().toJson(report))).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.post("/posts/6/report").content(String.valueOf(new Gson().toJson(createReport))).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.statusCode", is(1002)))
                 .andExpect(jsonPath("$.message", is("Input is wrong format")));
@@ -58,9 +59,9 @@ public class ReportPostAPITest {
     @Sql("/createPosts.sql")
     @Transactional
     public void test00_Id_InvalidValue() throws Exception {
-        Report report = new Report(10000000000L, "SPAM", "OK OK OK");
+        CreateReport createReport = new CreateReport(10000000000L, ReportType.SPAM.getValue(), "OK OK OK");
 
-        mvc.perform(MockMvcRequestBuilders.post("/posts/6/report").content(String.valueOf(new Gson().toJson(report))).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.post("/posts/6/report").content(String.valueOf(new Gson().toJson(createReport))).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.statusCode", is(1002)))
                 .andExpect(jsonPath("$.message", is("Input is wrong format")));
@@ -96,9 +97,9 @@ public class ReportPostAPITest {
     @Sql("/createPosts.sql")
     @Transactional
     public void test_Type_InvalidValue() throws Exception {
-        Report report = new Report(1L, "ABC", "OK OK OK");
+        CreateReport createReport = new CreateReport(1L, "ABC", "OK OK OK");
 
-        mvc.perform(MockMvcRequestBuilders.post("/posts/6/report").content(String.valueOf(new Gson().toJson(report))).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.post("/posts/6/report").content(String.valueOf(new Gson().toJson(createReport))).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.statusCode", is(1002)))
                 .andExpect(jsonPath("$.message", is("Input is wrong format")));
@@ -109,9 +110,9 @@ public class ReportPostAPITest {
     @Sql("/createPosts.sql")
     @Transactional
     public void test_Type_NotExist() throws Exception {
-        Report report = new Report(1L, null, "OK OK OK");
+        CreateReport createReport = new CreateReport(1L, null, "OK OK OK");
 
-        mvc.perform(MockMvcRequestBuilders.post("/posts/6/report").content(String.valueOf(new Gson().toJson(report))).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.post("/posts/6/report").content(String.valueOf(new Gson().toJson(createReport))).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.statusCode", is(1002)))
                 .andExpect(jsonPath("$.message", is("Input is wrong format")));
@@ -122,16 +123,16 @@ public class ReportPostAPITest {
     @Sql("/createPosts.sql")
     @Transactional
     public void test_Note_InvalidValue() throws Exception {
-        Report report = new Report(
+        CreateReport createReport = new CreateReport(
                 1L,
-                "SPAM",
+                ReportType.SPAM.getValue(),
                 "qAvG8FjNMgLXnMdvQK2yXfiYykYf73SrZiR" +
                         "PIrNE8QY3oYT35DwH5sqN5DVFwvwickFJ" +
                         "IMmY3ItwELN1K86FlAAh5yZS7dajQx2k9Tdq" +
                         "E9HEHxepIhmrFappLakYT4NhhG9vt1n9xzyIKJ" +
                         "zUG7JzOjzmdYp455t80citv4sNEEwEVrDxtDudGW" +
                         "4OzzoQ3ThbG5BgvUFqix");
-        mvc.perform(MockMvcRequestBuilders.post("/posts/6/report").content(String.valueOf(new Gson().toJson(report))).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.post("/posts/6/report").content(String.valueOf(new Gson().toJson(createReport))).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.statusCode", is(1002)))
                 .andExpect(jsonPath("$.message", is("Input is wrong format")));
@@ -142,9 +143,9 @@ public class ReportPostAPITest {
     @Sql("/createPosts.sql")
     @Transactional
     public void test00_All_Valid() throws Exception {
-        Report report = new Report(1L, "SPAM", "OK OK OK");
+        CreateReport createReport = new CreateReport(1L, ReportType.SPAM.getValue(), "OK OK OK");
 
-        mvc.perform(MockMvcRequestBuilders.post("/posts/6/report").content(String.valueOf(new Gson().toJson(report))).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.post("/posts/6/report").content(String.valueOf(new Gson().toJson(createReport))).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("OK"));
     }
@@ -154,9 +155,9 @@ public class ReportPostAPITest {
     @Sql("/createPosts.sql")
     @Transactional
     public void test01_All_Valid() throws Exception {
-        Report report = new Report(1L, "SPAM", "OK OK OK");
+        CreateReport createReport = new CreateReport(1L, ReportType.SPAM.getValue(), "OK OK OK");
 
-        mvc.perform(MockMvcRequestBuilders.post("/posts/5/report").content(String.valueOf(new Gson().toJson(report))).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.post("/posts/5/report").content(String.valueOf(new Gson().toJson(createReport))).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("NOT OK"));
     }
@@ -166,9 +167,9 @@ public class ReportPostAPITest {
     @Sql("/createPosts.sql")
     @Transactional
     public void test02_All_Valid() throws Exception {
-        Report report = new Report(1L, "IMPOLITE", "OK OK OK");
+        CreateReport createReport = new CreateReport(1L, ReportType.IMPOLITE.getValue(), "OK OK OK");
 
-        mvc.perform(MockMvcRequestBuilders.post("/posts/7/report").content(String.valueOf(new Gson().toJson(report))).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.post("/posts/7/report").content(String.valueOf(new Gson().toJson(createReport))).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("NOT OK"));
     }
@@ -178,9 +179,9 @@ public class ReportPostAPITest {
     @Sql("/createPosts.sql")
     @Transactional
     public void test03_All_Valid() throws Exception {
-        Report report = new Report(1L, "IMPOLITE", "OK OK OK");
+        CreateReport createReport = new CreateReport(1L, ReportType.IMPOLITE.getValue(), "OK OK OK");
 
-        mvc.perform(MockMvcRequestBuilders.post("/posts/0/report").content(String.valueOf(new Gson().toJson(report))).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.post("/posts/0/report").content(String.valueOf(new Gson().toJson(createReport))).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("OK"));
     }

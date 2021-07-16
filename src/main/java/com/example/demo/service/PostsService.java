@@ -1,8 +1,12 @@
 package com.example.demo.service;
 
-import com.example.demo.model.AppProperties;
-import com.example.demo.model.Post;
-import com.example.demo.model.Report;
+import com.example.demo.ReportType;
+import com.example.demo.dto.request.CreatePost;
+import com.example.demo.dto.request.CreateReport;
+import com.example.demo.dto.request.UpdatePost;
+import com.example.demo.dto.response.AppProperties;
+import com.example.demo.entity.Post;
+import com.example.demo.entity.Report;
 import com.example.demo.repository.PostsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +21,6 @@ import static java.lang.Math.max;
 @Service
 @RequiredArgsConstructor
 public class PostsService {
-
     // Auto inject the postsRepository
     @Autowired
     private PostsRepository postsRepository;
@@ -44,11 +47,15 @@ public class PostsService {
     // ------------------------------------------------------------------------------------------------------------------------------
     // This function help adding the specific post (in body of route) to the database,
     // if successfully it return that Object else return throw a Exception with code 1002, message "Post khong dung dinh dang".
-    public Post add(Post post) {
-        if (post.getTitle() == null || post.getDescription() == null)
+    public Post add(CreatePost createPost) {
+        if (createPost.getTitle() == null || createPost.getDescription() == null)
             throw new InvalidDataAccessApiUsageException("Failed");
-        if (post.getLikeCount() != 0) throw new InvalidDataAccessApiUsageException("Failed");
-        return postsRepository.save(post);
+
+        Post entityPost = new Post();
+        entityPost.setTitle(createPost.getTitle());
+        entityPost.setDescription(createPost.getDescription());
+
+        return postsRepository.save(entityPost);
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------
@@ -60,12 +67,15 @@ public class PostsService {
 
     // This function help to update the specific post with the id variable
     // if successfully it return the updated post else throw the Exception with the code 1001, content: "Doi tuong khong ton tai"
-    public Post edit(Long id, Post post) {
+    public Post edit(Long id, UpdatePost updatePost) {
         Optional<Post> postSpec = postsRepository.findById(id);
 
         if (postSpec.isEmpty()) throw new EmptyResultDataAccessException(-10);
 
-        post.setId(postSpec.get().getId());
+        Post post = postSpec.get();
+        post.setTitle(updatePost.getTitle());
+        post.setDescription(updatePost.getDescription());
+
         return postsRepository.save(post);
     }
 
@@ -98,11 +108,9 @@ public class PostsService {
 
     // ------------------------------------------------------------------------------------------------------------------------------
     // Function to check report Spam
-    public String spam(String description) {
-        Map<String, Integer> mp = new TreeMap<>();
+    public String spam(String[] arr) {
+        Map<String, Integer> mp = new HashMap<>();
         int count = 0;
-        // Convert to array of words
-        String arr[] = description.split("[ .,-;*]+");
 
         // Count the frequency of each word
         for (int i = 0; i <= arr.length - 1; i++) {
@@ -126,18 +134,12 @@ public class PostsService {
     }
 
     // Function to check report Impolite
-    public String impolite(String description) {
-        String[] keywords = appProperties.getKeywords();
-        Set<String> hashSet = new HashSet<String>();
-        // Convert to array of words
-        String[] arr = description.split("[ .,-;*]+");
-
-        // Convert to HASH SET of the word
-        Collections.addAll(hashSet, keywords);
+    public String impolite(String[] arr) {
+        HashSet<String> keywords = appProperties.getKeywords();
 
         // Check the keyword from application.properties whether there are impolite word
         for (int i = 0; i <= arr.length - 1; i++) {
-            if (hashSet.contains(arr[i])) return "NOT OK";
+            if (keywords.contains(arr[i])) return "NOT OK";
         }
 
         return "OK";
@@ -145,33 +147,31 @@ public class PostsService {
 
     // This function help to send report
     // if successfully it return OK / NOT OK else throw the Exception with the code 1001, content: "Doi tuong khong ton tai"
-    public String sendReport(Long id, Report report) {
+    public String sendReport(Long id, CreateReport createReport) {
         // Validation
-        if (report.getId() == null
-                || report.getId() >= 10000000000L
+        if (createReport.getId() == null
+                || createReport.getId() >= 10000000000L
         ) throw new InvalidDataAccessApiUsageException("Failed");
 
-        if (report.getType() == null
-                || (!report.getType().equals("SPAM") && !report.getType().equals("IMPOLITE"))
+        if (createReport.getType() == null
+                || (!createReport.getType().equals(ReportType.SPAM.getValue())) && (!createReport.getType().equals(ReportType.IMPOLITE.getValue()))
         ) throw new InvalidDataAccessApiUsageException("Failed");
 
-        if (report.getNote() != null
-                && report.getNote().length() >= 201
+        if (createReport.getNote() != null
+                && createReport.getNote().length() >= 201
         ) throw new InvalidDataAccessApiUsageException("Failed");
-
-
 
         Optional<Post> postSpec = postsRepository.findById(id);
-
         if (postSpec.isEmpty()) throw new InvalidDataAccessApiUsageException("Failed");
         // End Validation
 
         String description = postSpec.get().getDescription();
+        String[] arr = description.split("[ .,-;*]+");
         // String description = "  Nguyễn. Đức Quốc,     Đại   Đại Đại   Đại     Đức  ";
-        if (report.getType().equals("SPAM")) {
-            return spam(description);
-        } else if (report.getType().equals("IMPOLITE")) {
-            return impolite(description);
+        if (createReport.getType().equals(ReportType.SPAM.getValue())) {
+            return spam(arr);
+        } else if (createReport.getType().equals(ReportType.IMPOLITE.getValue())) {
+            return impolite(arr);
         } else throw new InvalidDataAccessApiUsageException("Failed");
     }
 }

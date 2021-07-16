@@ -1,6 +1,7 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
 
+import com.example.demo.ReportType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,9 +19,7 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ApiModelProperty(value = "Type", required = true, example = "IMPOLITE")
     private String type;
 
-    @ApiModelProperty(value = "Note", required = true, example = "Bài viết chứa từ thô tục")
     private String note;
 }
