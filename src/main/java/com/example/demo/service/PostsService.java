@@ -147,6 +147,10 @@ public class PostsService {
     // if successfully it return OK / NOT OK else throw the Exception with the code 1001, content: "Doi tuong khong ton tai"
     public String sendReport(Long id, Report report) {
         // Validation
+        if (report.getId() == null
+                || report.getId() >= 10000000000L
+        ) throw new InvalidDataAccessApiUsageException("Failed");
+
         if (report.getType() == null
                 || (!report.getType().equals("SPAM") && !report.getType().equals("IMPOLITE"))
         ) throw new InvalidDataAccessApiUsageException("Failed");
@@ -154,6 +158,8 @@ public class PostsService {
         if (report.getNote() != null
                 && report.getNote().length() >= 201
         ) throw new InvalidDataAccessApiUsageException("Failed");
+
+
 
         Optional<Post> postSpec = postsRepository.findById(id);
 

@@ -50,7 +50,7 @@ public class PostControllerTest {
     public void testFindAll() throws Exception {
         mvc.perform(get("/posts").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(5)))
+                .andExpect(jsonPath("$", hasSize(8)))
                 .andExpect(jsonPath("$[0].id", is(0)))
                 .andExpect(jsonPath("$[1].title", is("Tam Cốc")))
                 .andExpect(jsonPath("$[2].description", is("Thánh địa Mỹ Sơn là một danh lam thắng cảnh Việt Nam nổi tiếng được UNESCO công nhận.")))
