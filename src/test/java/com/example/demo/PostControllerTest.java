@@ -1,7 +1,8 @@
 package com.example.demo;
 
 
-import com.example.demo.model.Post;
+import com.example.demo.dto.request.CreatePost;
+import com.example.demo.entity.Post;
 import com.example.demo.service.PostsService;
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
@@ -17,6 +18,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import javax.transaction.Transactional;
 
 import static java.lang.Math.max;
 import static org.hamcrest.CoreMatchers.is;
@@ -44,10 +47,11 @@ public class PostControllerTest {
     // Test api http://localhost:8081/posts with Method = GET
     @Test
     @Sql("/createPosts.sql")
+    @Transactional
     public void testFindAll() throws Exception {
         mvc.perform(get("/posts").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(5)))
+                .andExpect(jsonPath("$", hasSize(8)))
                 .andExpect(jsonPath("$[0].id", is(0)))
                 .andExpect(jsonPath("$[1].title", is("Tam Cốc")))
                 .andExpect(jsonPath("$[2].description", is("Thánh địa Mỹ Sơn là một danh lam thắng cảnh Việt Nam nổi tiếng được UNESCO công nhận.")))
@@ -57,11 +61,12 @@ public class PostControllerTest {
     // Test api http://localhost:8081/posts/ with Method = POST
     @Test
     @Sql("/createPosts.sql")
+    @Transactional
     public void testAdd() throws Exception {
 
-        Post post = new Post(100L, "title1", "description1");
+        CreatePost createPost = new CreatePost("title1", "description1");
 
-        mvc.perform(post("/posts").content(String.valueOf(new Gson().toJson(post))).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(post("/posts").content(String.valueOf(new Gson().toJson(createPost))).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", is("title1")))
                 .andExpect(jsonPath("$.description", is("description1")))
@@ -70,6 +75,7 @@ public class PostControllerTest {
 
     // Test api http://localhost:8081/posts/{id} with Method = PUT
     @Test
+    @Transactional
     @Sql("/createPosts.sql")
     public void testEdit() throws Exception {
         Post post = postsService.getPost(0L);
@@ -84,6 +90,7 @@ public class PostControllerTest {
     // Test api http://localhost:8081/posts/{id}/like with Method = PUT
     @Test
     @Sql("/createPosts.sql")
+    @Transactional
     public void testLike() throws Exception {
         Post post = postsService.getPost(0L);
 
@@ -97,6 +104,7 @@ public class PostControllerTest {
     // Test api http://localhost:8081/posts/{id}/unlike with Method = PUT
     @Test
     @Sql("/createPosts.sql")
+    @Transactional
     public void testUnLike() throws Exception {
         Post post = postsService.getPost(0L);
 
@@ -110,6 +118,7 @@ public class PostControllerTest {
     // Test api http://localhost:8081/posts/{id} with Method = GET
     @Test
     @Sql("/createPosts.sql")
+    @Transactional
     public void testGetPost() throws Exception {
         mvc.perform(get("/posts/0").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
