@@ -33,5 +33,10 @@ public class ApiExceptionHandler {
         return new ErrorMessage(1003, "Id must not String");
     }
 
-
+    // Handle Exception for InvalidFormatException
+    @ExceptionHandler(NumberFormatException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorMessage HandleNumberFormatException(Exception ex, WebRequest request) {
+        return new ErrorMessage(1003, "Id must not String");
+    }
 }

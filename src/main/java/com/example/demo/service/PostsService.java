@@ -149,9 +149,7 @@ public class PostsService {
     // if successfully it return OK / NOT OK else throw the Exception with the code 1001, content: "Doi tuong khong ton tai"
     public String sendReport(Long id, CreateReport createReport) {
         // Validation
-        if (createReport.getId() == null
-                || createReport.getId() >= 10000000000L
-        ) throw new InvalidDataAccessApiUsageException("Failed");
+        if (id == null || id >= 10000000000L) throw new InvalidDataAccessApiUsageException("Failed");
 
         if (createReport.getType() == null
                 || (!createReport.getType().equals(ReportType.SPAM.getValue())) && (!createReport.getType().equals(ReportType.IMPOLITE.getValue()))

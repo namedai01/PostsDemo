@@ -86,9 +86,10 @@ public class PostsController {
     // Example, the route is : http://localhost:8081/1/report with method POST
     // This route help to send a report to check whether post is spam or impolite
     // if successfully it return "OK" or "NOT OK" else throw the Exception with the code 1001, content: "Doi tuong khong ton tai"
-    @PostMapping("/posts/{id}/report")
-    public String sendReport(@PathVariable(name = "id") Long id, @RequestBody CreateReport createReport) {
+    @PostMapping(value = {"/posts/report", "/posts/{id}/report"})
+    public String sendReport(@PathVariable(name = "id", required = false) Long id, @RequestBody CreateReport createReport) {
         return postsService.sendReport(id, createReport);
+//        return "ID" + id;
 //        return postsService.sendReport();
     }
 }

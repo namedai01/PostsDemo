@@ -1,6 +1,7 @@
 package com.example.demo.dto.request;
 
 import com.example.demo.ReportType;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,9 +12,9 @@ import javax.persistence.Id;
 @Data
 @AllArgsConstructor
 public class CreateReport {
-    private Long id;
-
+    @ApiModelProperty(value = "Type", required = true, example = "SPAM")
     private String type;
 
+    @ApiModelProperty(value = "Note", required = true, example = "OK OK OK")
     private String note;
 }
